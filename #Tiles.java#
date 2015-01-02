@@ -1,0 +1,13 @@
+
+public class Tiles {
+    private int points;
+
+    public Tiles() {
+        points = 0;
+    }
+    public Tiles() {
+
+    }
+ 
+
+    public static void main(

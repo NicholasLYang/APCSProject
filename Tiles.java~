@@ -1,0 +1,9 @@
+
+public class Tiles {
+    private int points;
+
+    public Tiles() {
+	count = 0;
+    }
+
+}
