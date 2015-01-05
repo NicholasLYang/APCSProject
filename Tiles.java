@@ -1,21 +1,16 @@
 
 public class Tiles {
     private int points;
-    private boolean doubleWord, tripleWord, doubleLetter, tripleLetter = false;
+    private int wordBonus, letterBonus = 1;
+    private letter;
 
     public Tiles() {
 	points = 0;
     }
-    public Tiles(int i) {
+    public Tiles(int w, int l) {
 	points = 0;
-	if(i==0) { doubleLetter = true;	}
-	else if(i==1) {tripleLetter = true;}
-	if(i==2) { doubleWord = true;}
-	else if(i==3) {tripleWord = true;}
-	else {
-	    doubleWord = false;
-	    tripleWord = false;
-	}
+        wordBonus = w;
+	letterBonus = l;
     }
 
     public int getPoints() {
@@ -24,6 +19,14 @@ public class Tiles {
     
     public void setPoints(int i) {
 	points = points + i;
+    }
+
+    public int getWBonus() {
+        return wordBonus;
+    }
+
+    public int getLBonus() {
+	return letterBonus;
     }
 
 }
