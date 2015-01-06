@@ -1,13 +1,19 @@
 
 public class Player {
     private int score;
-    
-    public Player() {
+    private String name;
+    private int[] firstTile = new int[2];
+    public Player(String n) {
 	score = 0;
+	name = n;
     }
 
-    public int getPoints() {
+    public int getScore() {
 	return score;
+    }
+    public void getPoints()
+    {
+	
     }
 
 }
