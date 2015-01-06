@@ -3,6 +3,7 @@ public class Tiles {
     private int points;
     private int wordBonus, letterBonus = 1;
     private char letter;
+    private LetterVal values;
 
     public Tiles() {
 	points = 0;
@@ -40,6 +41,7 @@ public class Tiles {
     
     //set letter
     public void setLetter(char l) {
+        setPoints(values.getVal(l));
 	letter = l;
     }
 
