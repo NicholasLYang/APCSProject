@@ -1,0 +1,16 @@
+import java.io.*;
+import java.util.*;
+
+public class GUI extends JFrame {
+    private Container pane;
+
+    public GUI() {
+	setTitle("Scrabble");
+	setSize(700,700);
+	setLocation(100,100);
+	setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+	pane = getContentPane();
+    }
+
+}
