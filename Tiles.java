@@ -1,9 +1,10 @@
 
 public class Tiles {
-    private int points;
-    private int wordBonus, letterBonus = 1;
-    private char letter;
-    private LetterVal values;
+    private int points; // the amount of points the Tile is worth
+    private int wordBonus, letterBonus = 1; // the bonuses that the Tile has
+    private char letter; // the letter that is placed on the Tile
+    private LetterVal values; // In order to convert the letter to an int value
+    private boolean new; // To determine if the letter placed on the board is new
 
     public Tiles() {
 	points = 0;
