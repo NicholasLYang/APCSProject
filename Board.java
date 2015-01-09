@@ -10,6 +10,10 @@ public class Board {
 	    }
 	}
     }
+    
+    public Tiles[][] getBoard() {
+	return board;
+    }
 
     public void assignLetter(char l, int r, int c) {
 	board[r][c].setLetter(l);

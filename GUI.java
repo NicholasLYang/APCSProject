@@ -5,6 +5,7 @@ public class GUI extends JFrame {
     private Container pane;
     private JTextField name1,name2,name3,name4;
     private JPanel canvas;
+    private Board b = new Board();
     
     public GUI() {
 	setTitle("Scrabble");
@@ -12,12 +13,12 @@ public class GUI extends JFrame {
 	setLocation(100,100);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-	Board b = new Board();
+	
 	pane = getContentPane();
 	canvas = new Canvas();
 	canvas.setPreferredSize(new Dimension(2250,2250));
 	canvas.setBorder(BorderFactory.createLineBorder(Color.darkGray));
-	canvas.printBoard(b);
+	//	canvas.printBoard(b); (did you want to do b.printBoard() ?)
 	pane.add(canvas);
 	TextField name1, name2, name3, name4 = new TextField();
 	
@@ -28,12 +29,13 @@ public class GUI extends JFrame {
     {
 	public void printBoard(Board b, Graphics g)
 	{
-	    Tile[][] board = b.getBoard();
+	    Tiles[][] board = new Tiles[15][15];
+	    board = b.getBoard();
 	    for (int i = 0; i < board.length; i++)
 		{
-		    for (int i = 0; i < board[1].length; i++)
+		    for (int x = 0; x < board[i].length; x++)
 			{
-			    canvas.paintCompnent(g);
+			    canvas.paintComponent(g);
 			    g.setColor(Color.gray);
 			    g.fillRect(0,0,30,30);
 			}
