@@ -4,21 +4,22 @@ import java.awt.*;
 public class GUI extends JFrame {
     private Container pane;
     private JTextField name1,name2,name3,name4;
-    private JPanel canvas;
+    public Canvas canvas;
     private Board b = new Board();
     
-    public GUI() {
+    public GUI(Board board) {
+	b = board;
 	setTitle("Scrabble");
-	setSize(700,700);
+	setSize(900,900);
 	setLocation(100,100);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 	
 	pane = getContentPane();
 	canvas = new Canvas();
-	canvas.setPreferredSize(new Dimension(2250,2250));
-	canvas.setBorder(BorderFactory.createLineBorder(Color.darkGray));
-	//	canvas.printBoard(b); (did you want to do b.printBoard() ?)
+	canvas.setPreferredSize(new Dimension(450,450));
+	canvas.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	canvas.setBackground(Color.DARK_GRAY);
 	pane.add(canvas);
 	TextField name1, name2, name3, name4 = new TextField();
 	
@@ -27,30 +28,33 @@ public class GUI extends JFrame {
 
     private class Canvas extends JPanel
     {
-	public void printBoard(Board b, Graphics g)
+	
+
+	public void paintComponent(Graphics g)
 	{
-	    Tiles[][] board = new Tiles[15][15];
-	    board = b.getBoard();
+	    super.paintComponent(g);
+	    Color placedTile = new Color(178, 142, 112);
+	    Tiles[][] board = b.getBoard();
+	    board[1][1].setPlaced(true);
 	    for (int i = 0; i < board.length; i++)
 		{
-		    for (int x = 0; x < board[i].length; x++)
+		    for (int j = 0; j < board[1].length; j++)
 			{
-			    canvas.paintComponent(g);
-			    g.setColor(Color.gray);
-			    g.fillRect(0,0,30,30);
+			    g.drawRect(100 + i * 30, 100 + j * 30, 30, 30);
+			    if (board[i][j].getPlaced() == true)
+				{
+				    g.setColor(placedTile);
+				    g.fillRect(100 + i * 30, 100 + j * 30, 30, 30);
+				    g.setColor(Color.BLACK);
+				}
+					
 			}
 		}
 	}
+				
+	
     }
 			
 
-    public static void main(String[] args) {
-	GUI x = new GUI();
-	x.setVisible(true);
-	Player One = new Player(name1.getText());
-	Player Two = new Player(name2.getText());
-	Player Three = new Player(name3.getText());
-	Player Four = new Player(name4.getText());
-    }
 
 }
