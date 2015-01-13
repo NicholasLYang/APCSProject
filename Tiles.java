@@ -5,6 +5,7 @@ public class Tiles {
     private char letter; // the letter that is placed on the Tile
     private LetterVal values; // In order to convert the letter to an int value
     private boolean placed;
+    private boolean visible;
 	
 
     public Tiles() {
@@ -18,6 +19,16 @@ public class Tiles {
 	letterBonus = l;
 	placed = p;
     }
+    // returns whether the tile's visible. Visible just mean's the tile's on the board. Placed mean's it's been scored
+    public boolean getVisible()
+    {
+	return visible;
+    }
+    public void setVisible(boolean v)
+    {
+	visible = v;
+    }
+	    
     // returns whether the tile's been placed
     public boolean getPlaced()
     {
