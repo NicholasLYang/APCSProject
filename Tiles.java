@@ -5,7 +5,7 @@ public class Tiles {
     private char letter; // the letter that is placed on the Tile
     private LetterVal values; // In order to convert the letter to an int value
     private boolean placed;
-	
+    private boolean visible;
 
     public Tiles() {
 	points = 0;
@@ -35,7 +35,12 @@ public class Tiles {
     
     //sets the Tile to a certain amount of points
     public void setPoints(int i) {
-	points = points + i;
+	int newPoints = new int();
+	newPoints = i;
+	if(letterBonus) {
+	    newPoints = i * letterBonus;
+	}
+	points = points + newPoints;
     }
 
     //returns Word Bonus

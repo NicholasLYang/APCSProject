@@ -1,3 +1,4 @@
+import java.io.*;
 
 public class Board {
     private Tiles[][] board;
@@ -18,4 +19,11 @@ public class Board {
     public void assignLetter(char l, int r, int c) {
 	board[r][c].setLetter(l);
     }
+
+   /*
+    public int getWords() {
+	
+    }
+
+    */
 }
