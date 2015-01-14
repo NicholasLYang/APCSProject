@@ -2,7 +2,7 @@
 public class Tiles {
     private int points; // the amount of points the Tile is worth
     private int wordBonus, letterBonus = 1; // the bonuses that the Tile has
-    private char letter; // the letter that is placed on the Tile
+    private String letter = "A"; // the letter that is placed on the Tile
     private LetterVal values; // In order to convert the letter to an int value
     private boolean placed;
     private boolean visible;
@@ -60,13 +60,14 @@ public class Tiles {
     }
 
     //return letter
-    public char getLetter() {
+    public String getLetter() {
 	return letter;
     }
     
     //set letter
-    public void setLetter(char l) {
-        setPoints(values.getVal(l));
+    public void setLetter(String l) {
+	
+        setPoints(values.getVal(l.charAt(1)));
 	letter = l;
     }
 
