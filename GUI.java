@@ -61,9 +61,10 @@ public class GUI extends JFrame {
 		     tileWidth = getHeight() / 20;
 		}
 
-	    // Just makes the font a bit larger and bold
-	    Font boldFont = new Font ("SansSerif", Font.BOLD, tileWidth / 2);
-	    g.setFont(boldFont);
+	    // sets up the two different fonts
+	    Font letterFont = new Font ("SansSerif", Font.BOLD, tileWidth / 2);
+	    Font pointFont = new Font("SansSerif", Font.BOLD, tileWidth / 3);
+	    g.setFont(letterFont);
 
 	    /* Defines the colors for a placed tile (a tile which has been scored/used), 
 	       a visible tile (one which has been put on the board but not scored/used) 
@@ -106,7 +107,8 @@ public class GUI extends JFrame {
 			      because chars are annoying to draw. Plus it's easier to
 			      turn a string into a char than vice versa
 			    */
-			    String s = board[i][j].getLetter();
+			    String l = board[i][j].getLetter();
+			    String p = "" + board[i][j].getPoints();
 			    
 
 			    // Draws outline for tile slot
@@ -117,7 +119,10 @@ public class GUI extends JFrame {
 				    g.setColor(visibleTile);
 				    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
 				    g.setColor(Color.BLACK);
-				    g.drawString(s, tileX + (tileWidth / 2), tileY + (tileWidth / 2));
+				    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
+				    g.setFont(pointFont);
+				    g.drawString(p, tileX + (tileWidth * 5 / 8), tileY + (tileWidth * 3 / 4));
+				    g.setFont(letterFont);
 				}
 			    /*
 			      logic is a bit tricky here, ran into some confusing errors
@@ -128,7 +133,13 @@ public class GUI extends JFrame {
 				    g.setColor(placedTile);
 				    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
 				    g.setColor(Color.BLACK);
-				    g.drawString(s, tileX + (tileWidth / 2), tileY + (tileWidth / 2));
+				    // Draws the letter on the tile
+				    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
+
+				    // Draws the point value on the tile
+				    g.setFont(pointFont);
+				    g.drawString(p, tileX + (tileWidth * 5 / 8), tileY + (tileWidth * 3 / 4));
+				    g.setFont(letterFont);
 				}
 			    else
 				{
