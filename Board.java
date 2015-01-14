@@ -37,11 +37,11 @@ public class Board {
     }
 
     // --- Finds which words to calculate points for
-    public int getWords() {
+    public int getPoints() {
 	// Lists of all the new tiles + total points
 	ArrayList<int> x = new ArrayList<int>();
 	ArrayList<int> y = new ArrayList<int>();
-	int pointCalc = 0;
+	int points = 0;
 
 	// adds the coordinates of the new Tiles
 	for(int i = 0; i<board.length; i++) {
@@ -94,6 +94,7 @@ public class Board {
 		points = points + Wpoints;
 	    }
 	}
+	return points;
     }
 
 }
