@@ -2,10 +2,14 @@
 public class Tiles {
     private int points; // the amount of points the Tile is worth
     private int wordBonus, letterBonus = 1; // the bonuses that the Tile has
-    private char letter; // the letter that is placed on the Tile
+    private String letter = "A"; // the letter that is placed on the Tile
     private LetterVal values; // In order to convert the letter to an int value
     private boolean placed;
     private boolean visible;
+<<<<<<< HEAD
+=======
+	
+>>>>>>> 195701991b9193239f487367d5b086b52f19f850
 
     public Tiles() {
 	points = 0;
@@ -18,6 +22,16 @@ public class Tiles {
 	letterBonus = l;
 	placed = p;
     }
+    // returns whether the tile's visible. Visible just mean's the tile's on the board. Placed mean's it's been scored
+    public boolean getVisible()
+    {
+	return visible;
+    }
+    public void setVisible(boolean v)
+    {
+	visible = v;
+    }
+	    
     // returns whether the tile's been placed
     public boolean getPlaced()
     {
@@ -54,13 +68,14 @@ public class Tiles {
     }
 
     //return letter
-    public char getLetter() {
+    public String getLetter() {
 	return letter;
     }
     
     //set letter
-    public void setLetter(char l) {
-        setPoints(values.getVal(l));
+    public void setLetter(String l) {
+	
+        setPoints(values.getVal(l.charAt(1)));
 	letter = l;
     }
 
