@@ -17,6 +17,7 @@ public class GUI extends JFrame {
     private JTextField name1,name2,name3,name4;
     public Canvas canvas;
     private Board b = new Board();
+    private Player p1;
     
     public GUI(Board board) {
 	b = board;
@@ -37,7 +38,7 @@ public class GUI extends JFrame {
 	
     }
     
-
+    
     private class Canvas extends JPanel
     {
 	
@@ -48,23 +49,27 @@ public class GUI extends JFrame {
 	    super.paintComponent(g); // just adds the stuff from JPanel's version of paintComponent
 	    
 	    int tileWidth = 30; // tileWidth is created and given a default value
-	   
+	    int titleSize = 100;
 
 		/* Basically if the width of the window is smaller than the height,
-		the board is sized according to the width, else it's sized according to the height */
+		the board is sized according to the width, else it's sized according to the height.
+		titleSize does something similar for the size of the title */
 	    if (getWidth() < getHeight())
 		{
-		     tileWidth = getWidth() / 24; 
+		     tileWidth = getWidth() / 25;
+		     titleSize = getWidth() / 12;
 		}
 	    else
 		{
-		     tileWidth = getHeight() / 20;
+		     tileWidth = getHeight() / 21;
+		     titleSize = getHeight() / 12;
 		}
 
 	    // sets up the two different fonts
 	    Font letterFont = new Font ("SansSerif", Font.BOLD, tileWidth / 2);
 	    Font pointFont = new Font("SansSerif", Font.BOLD, tileWidth / 3);
-	    Font titleFont = new Font("SansSerif", Font.BOLD, getWidth() / 12);
+	    Font titleFont = new Font("SansSerif", Font.BOLD, titleSize);
+	    
 	    g.setFont(letterFont);
 
 	    
@@ -89,17 +94,30 @@ public class GUI extends JFrame {
 	    board[5][5].setVisible(true);
 	    board[6][6].setPlaced(true);
 
-	    // Draws the title and author names
-
+	    // Draws the title and author names. Letter font is used for authors names because it's the right size
+	    FontMetrics title = g.getFontMetrics(titleFont);
+	    int titleWidth = title.stringWidth("Scrabble");
+	    int titleHeight = title.getAscent();
+	    FontMetrics authors = g.getFontMetrics(letterFont);
+	    int authorWidth = authors.stringWidth("by Sarah Chen and Nicholas Yang");
+	    int authorHeight = authors.getAscent();
+		
+	    g.setFont(titleFont);
+	    g.drawString("Scrabble" , (getWidth() - titleWidth) / 2, titleHeight + 2) ;
+	    g.setFont(letterFont);
+	    g.drawString("by Sarah Chen and Nicholas Yang", (getWidth() - authorWidth) / 2, authorHeight + titleHeight + 4);
 	    
 	    // Drawing the overall red board before putting in the rectangles for the tile slots. 
-	    g.drawRect(98, 98, tileWidth * 15, tileWidth * 15);
+	    g.drawRect(getWidth() / 5, (getHeight() - tileWidth * 15) / 2, tileWidth * 15, tileWidth * 15);
 	    g.setColor(Color.RED);
-	    g.fillRect(98, 98, tileWidth * 15 + 2, tileWidth * 15 + 2);
+	    g.fillRect(getWidth() / 5 , (getHeight() - tileWidth * 15) / 2, tileWidth * 15 + 2, tileWidth * 15 + 2);
 
 	    // Remember, always set the color back to black after done painting
 	    g.setColor(Color.BLACK);
 
+
+	    // Draws the tileRack
+	    // g.drawRect
 
 	    // Usual double for loop for 2d arrays
 	    for (int i = 0; i < board.length; i++)
@@ -108,8 +126,8 @@ public class GUI extends JFrame {
 		    for (int j = 0; j < board[1].length; j++)
 			{
 			    // x and y coords for the tiles. Note that the upper left corner is 0,0
-			    int tileX = 100 + i * tileWidth;
-			    int tileY = 100 + j * tileWidth;
+			    int tileX = (getWidth() / 5) + 2 + i * tileWidth;
+			    int tileY = (getHeight() - tileWidth * 15) / 2 + 2 + j * tileWidth;
 
 			    /*
 			      Gets the letter from the tile. Had to make it a string
@@ -128,10 +146,14 @@ public class GUI extends JFrame {
 				    g.setColor(visibleTile);
 				    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
 				    g.setColor(Color.BLACK);
+				    // Draws the letter on the tile
+				    g.setFont(letterFont);
 				    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
+
+				    // Draws the point on the tile
 				    g.setFont(pointFont);
 				    g.drawString(p, tileX + (tileWidth * 5 / 8), tileY + (tileWidth * 3 / 4));
-				    g.setFont(letterFont);
+				 
 				}
 			    /*
 			      logic is a bit tricky here, ran into some confusing errors
@@ -143,12 +165,13 @@ public class GUI extends JFrame {
 				    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
 				    g.setColor(Color.BLACK);
 				    // Draws the letter on the tile
+				    g.setFont(letterFont);
 				    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
 
 				    // Draws the point value on the tile
 				    g.setFont(pointFont);
 				    g.drawString(p, tileX + (tileWidth * 5 / 8), tileY + (tileWidth * 3 / 4));
-				    g.setFont(letterFont);
+				   
 				}
 			    else
 				{

@@ -12,7 +12,7 @@ public class Player {
 	return score;
     }
 
-    public void placeLetter(Tiles[][] b, char l, int r, int c) {
+    public void placeLetter(Board b, char l, int r, int c) {
 	b.assignLetter(l, r, c);
     }
 
