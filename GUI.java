@@ -64,7 +64,10 @@ public class GUI extends JFrame {
 	    // sets up the two different fonts
 	    Font letterFont = new Font ("SansSerif", Font.BOLD, tileWidth / 2);
 	    Font pointFont = new Font("SansSerif", Font.BOLD, tileWidth / 3);
+	    Font titleFont = new Font("SansSerif", Font.BOLD, getWidth() / 12);
 	    g.setFont(letterFont);
+
+	    
 
 	    /* Defines the colors for a placed tile (a tile which has been scored/used), 
 	       a visible tile (one which has been put on the board but not scored/used) 
@@ -74,6 +77,9 @@ public class GUI extends JFrame {
 	    Color visibleTile = new Color(239, 194, 155);
 	    Color blankTile = new Color(84, 84, 84);
 
+ 
+
+	    
 	    /* Imports the board from the one in the GUI. This might lead to some 
 	       issues because there needs an instance of Board in the GUI class that's constantly updated. 
 	     */
@@ -83,6 +89,9 @@ public class GUI extends JFrame {
 	    board[5][5].setVisible(true);
 	    board[6][6].setPlaced(true);
 
+	    // Draws the title and author names
+
+	    
 	    // Drawing the overall red board before putting in the rectangles for the tile slots. 
 	    g.drawRect(98, 98, tileWidth * 15, tileWidth * 15);
 	    g.setColor(Color.RED);
@@ -151,14 +160,13 @@ public class GUI extends JFrame {
 			}
 		}
 	}
-<<<<<<< HEAD
+
 			       	
-=======
+
 				
     }
 }
 			
->>>>>>> 195701991b9193239f487367d5b086b52f19f850
 
 
 
