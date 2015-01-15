@@ -1,9 +1,9 @@
 
 public class Tiles {
-    private int points; // the amount of points the Tile is worth
-    private int wordBonus, letterBonus = 1; // the bonuses that the Tile has
-    private String letter = "A"; // the letter that is placed on the Tile
-    private LetterVal values; // In order to convert the letter to an int value
+    private int points;
+    private int wordBonus, letterBonus = 1;
+    private String letter = "A";
+    private LetterVal values;
     private boolean placed;
     private boolean visible;
 
@@ -13,33 +13,33 @@ public class Tiles {
     public Tiles() {
 	points = 0;
 	placed = false;
+	visible = false;
+	values = new LetterVal();
     }
     
     public Tiles(int w, int l, boolean p) {
 	points = 0;
         wordBonus = w;
 	letterBonus = l;
+	visible = false;
 	placed = p;
     }
-    // returns whether the tile's visible. Visible just mean's the tile's on the board. Placed mean's it's been scored
-    public boolean getVisible()
-    {
+    // Visible just mean's the tile's on the board. Placed mean's it's been scored
+    public boolean getVisible() {
 	return visible;
     }
-    public void setVisible(boolean v)
-    {
+    public void setVisible(boolean v) {
 	visible = v;
     }
 	    
     // returns whether the tile's been placed
-    public boolean getPlaced()
-    {
+    public boolean getPlaced() {
 	return placed;
     }
-    public void setPlaced(boolean b)
-    {
+    public void setPlaced(boolean b) {
 	placed = b;
     }
+    
     //returns the amount of points that the Tile is worth
     public int getPoints() {
 	return points;
@@ -50,9 +50,7 @@ public class Tiles {
     public void setPoints(int i) {
 	int newPoints = 0;
 	newPoints = i;
-	
 	newPoints = i * letterBonus;
-	
 	points = points + newPoints;
     }
 
@@ -73,9 +71,9 @@ public class Tiles {
     
     //set letter
     public void setLetter(String l) {
-	
-        setPoints(values.getVal(l.charAt(1)));
+	setPoints(values.getVal(l.charAt(0)));
 	letter = l;
+	visible = true;
     }
 
 }

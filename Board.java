@@ -22,7 +22,7 @@ public class Board {
     }
 
     // --- Gives a Tile on the board a letter
-    public void assignLetter(char l, int r, int c) {
+    public void assignLetter(String l, int r, int c) {
 	board[r][c].setLetter(l);
     }
 
@@ -39,8 +39,8 @@ public class Board {
     // --- Finds which words to calculate points for
     public int getPoints() {
 	// Lists of all the new tiles + total points
-	ArrayList<int> x = new ArrayList<int>();
-	ArrayList<int> y = new ArrayList<int>();
+	ArrayList<Integer> x = new ArrayList<Integer>();
+	ArrayList<Integer> y = new ArrayList<Integer>();
 	int points = 0;
 
 	// adds the coordinates of the new Tiles
@@ -69,7 +69,7 @@ public class Board {
 		bonus = bonus * board[tmpx][tmpy].getWBonus();
 		tmpy++;
 	    }
-	    
+
 	    if(checkWord(word)) {
 	        Wpoints = Wpoints * bonus;
 		points = points + Wpoints;
@@ -95,6 +95,28 @@ public class Board {
 	    }
 	}
 	return points;
+    }
+
+    // For testing purposes
+    public static void main(String[] args) {
+	Board board = new Board();
+	board.assignLetter("H",1,2);
+	board.assignLetter("E",1,3);
+	board.assignLetter("L",1,4);
+	board.assignLetter("L",1,5);
+	board.assignLetter("O",1,6);
+	File file = new File("words.txt");
+	
+	try {
+	    Scanner scan = new Scanner(file);
+	    while (scan.hasNextLine()) {
+		System.out.println(scan.nextLine());
+	    }
+	}
+	catch (FileNotFoundException e) {
+	    e.printStackTrace();
+	}
+
     }
 
 }
