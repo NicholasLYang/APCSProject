@@ -53,7 +53,8 @@ public class GUI extends JFrame {
     private class mouseEvent implements MouseListener
     {
 	
-
+	Tiles selectedTile;
+	boolean isTileSelected = false; 
 
 	public void mouseReleased(MouseEvent e)
 	{
@@ -77,13 +78,26 @@ public class GUI extends JFrame {
 
 	public void mousePressed(MouseEvent e)
 	{
+	    
 	    if (e.getX() > boardX && e.getY() > boardY && e.getY() < boardY + tileWidth * 15 && e.getX() < boardX + tileWidth * 15)
 		{
+		     
 		     selectedTileX = (e.getX() - boardX) / tileWidth;
 		     selectedTileY = (e.getY() - boardY) / tileWidth;
-		    
-		    board[selectedTileX][selectedTileY].setVisible(true);
-		    repaint();
+		     if (isTileSelected && board[selectedTileX][selectedTileY].getTileMode() == 0)
+			{
+				    board[selectedTileX][selectedTileY].setLetter(selectedTile.getLetter());
+				    selectedTile.setTileMode(0);
+				    repaint();
+			}
+
+		     else
+			 {
+			     board[selectedTileX][selectedTileY].setTileMode(3);
+			     selectedTile = board[selectedTileX][selectedTileY];
+			     isTileSelected = true;
+			     repaint();
+			 }
 		}
 	}
     }
@@ -133,14 +147,15 @@ public class GUI extends JFrame {
 	    Color placedTile = new Color(206, 163, 132);
 	    Color visibleTile = new Color(239, 194, 155);
 	    Color blankTile = new Color(84, 84, 84);
-
+	    Color selectedTile = new Color(234, 214, 185);
  
 
 	    
 
 	    // Just examples of a visible tile and a placed tile
-	    board[5][5].setVisible(true);
-	    board[6][6].setPlaced(true);
+	    board[5][5].setTileMode(1);
+	    board[6][6].setTileMode(2);
+	    board[7][7].setTileMode(3);
 
 	    // Draws the title and author names. Letter font is used for authors names because it's the right size
 	    FontMetrics title = g.getFontMetrics(titleFont);
@@ -190,44 +205,38 @@ public class GUI extends JFrame {
 			    // Draws outline for tile slot
 			    g.drawRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
 			    // Depending on variables from the tile, it paints with one of the three different colors
-			    if (board[i][j].getVisible() == true)
+			   
+			    switch (board[i][j].getTileMode())
 				{
+				case 1: 
 				    g.setColor(visibleTile);
-				    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
-				    g.setColor(Color.BLACK);
-				    // Draws the letter on the tile
-				    g.setFont(letterFont);
-				    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
-
-				    // Draws the point on the tile
-				    g.setFont(pointFont);
-				    g.drawString(p, tileX + (tileWidth * 5 / 8), tileY + (tileWidth * 3 / 4));
-				 
-				}
-			    /*
-			      logic is a bit tricky here, ran into some confusing errors
-			      with the last statement always being called
-			    */
-			    else if (board[i][j].getPlaced() == true)
-				{
+				    break;
+				
+				case 2: 
 				    g.setColor(placedTile);
-				    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
-				    g.setColor(Color.BLACK);
-				    // Draws the letter on the tile
-				    g.setFont(letterFont);
-				    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
-
-				    // Draws the point value on the tile
-				    g.setFont(pointFont);
-				    g.drawString(p, tileX + (tileWidth * 5 / 8), tileY + (tileWidth * 3 / 4));
-				   
-				}
-			    else
-				{
+				    break;
+				case 3:
+				    g.setColor(visibleTile);
+				    break;
+				default:
 				    g.setColor(blankTile);
+				    break;
+				    
+				}
 				    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
 				    g.setColor(Color.BLACK);
-				}
+				   
+				    if (board[i][j].getTileMode() != 0)
+					{
+					    // Draws the letter on the tile
+					    g.setFont(letterFont);
+					    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
+					
+
+					    // Draws the point value on the tile
+					    g.setFont(pointFont);
+					    g.drawString(p, tileX + (tileWidth * 5 / 8), tileY + (tileWidth * 3 / 4));
+					}
 					
 			}
 		}

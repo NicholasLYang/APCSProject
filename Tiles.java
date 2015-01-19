@@ -4,8 +4,7 @@ public class Tiles {
     private int wordBonus, letterBonus = 1;
     private String letter = "A";
     private LetterVal values;
-    private boolean placed;
-    private boolean visible;
+    private int tileMode;
     private int tileX;
     private int tileY;
 	
@@ -15,17 +14,15 @@ public class Tiles {
 
     public Tiles() {
 	points = 0;
-	placed = false;
-	visible = false;
+	tileMode = 0;
 	values = new LetterVal();
     }
     
-    public Tiles(int w, int l, boolean p) {
+    public Tiles(int w, int l, int t) {
 	points = 0;
         wordBonus = w;
 	letterBonus = l;
-	visible = false;
-	placed = p;
+	tileMode = t;
     }
     public void setTileCoords (int x, int y)
     {
@@ -42,30 +39,32 @@ public class Tiles {
     {
 	return tileY;
     }
-    // Visible just mean's the tile's on the board. Placed mean's it's been scored
-    public boolean getVisible() {
-	return visible;
+    /* 
+       tileMode determines whether a tile is selected (to be moved),
+       visible (on the board but not scored) or 
+       scored (not movable and already played) 
+       Invisible = 0
+       Selected = 1
+       Visible = 2
+       Scored = 3
+    */
+    public int getTileMode()
+    {
+	return tileMode;
     }
-    public void setVisible(boolean v) {
-	visible = v;
-	if (visible)
+    public void setTileMode(int t)
+    {
+	if (tileMode == 3)
 	    {
-		placed = false;
+		System.out.println("Error, this tile cannot be moved");
+	    }
+	else
+	    {
+		tileMode = t;
 	    }
     }
-	    
-    // returns whether the tile's been placed
-    public boolean getPlaced() {
-	return placed;
-    }
-    public void setPlaced(boolean b) {
-	placed = b;
-	if (placed)
-	    {
-		visible = false;
-	    }
 	
-    }
+
     
     //returns the amount of points that the Tile is worth
     public int getPoints() {
@@ -100,7 +99,8 @@ public class Tiles {
     public void setLetter(String l) {
 	setPoints(values.getVal(l.charAt(0)));
 	letter = l;
-	visible = true;
+	
     }
+
 
 }
