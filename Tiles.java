@@ -6,6 +6,9 @@ public class Tiles {
     private LetterVal values;
     private boolean placed;
     private boolean visible;
+    private int tileX;
+    private int tileY;
+	
 
 
       
@@ -24,12 +27,31 @@ public class Tiles {
 	visible = false;
 	placed = p;
     }
+    public void setTileCoords (int x, int y)
+    {
+	tileX = x;
+	tileY = y;
+    }
+    
+    public int getTileX()
+    {
+	return tileX;
+    }
+
+    public int getTileY()
+    {
+	return tileY;
+    }
     // Visible just mean's the tile's on the board. Placed mean's it's been scored
     public boolean getVisible() {
 	return visible;
     }
     public void setVisible(boolean v) {
 	visible = v;
+	if (visible)
+	    {
+		placed = false;
+	    }
     }
 	    
     // returns whether the tile's been placed
@@ -38,6 +60,11 @@ public class Tiles {
     }
     public void setPlaced(boolean b) {
 	placed = b;
+	if (placed)
+	    {
+		visible = false;
+	    }
+	
     }
     
     //returns the amount of points that the Tile is worth

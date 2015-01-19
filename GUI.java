@@ -9,18 +9,28 @@ g.setColor(Color.RED); <-- sets the "paintbrush" color to red. Color is a class 
 
      */
 
+import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 
 public class GUI extends JFrame {
     private Container pane;
     private JTextField name1,name2,name3,name4;
     public Canvas canvas;
-    private Board b = new Board();
+    private Tiles[][] board; // the board array needs to be updated whenever something happens. 
     private Player p1;
-    
-    public GUI(Board board) {
-	b = board;
+    private int tileWidth = 30; // tileWidth is created and given a default value
+    private int titleSize = 100;
+    private int boardX = 100;
+    private int boardY = 100;
+    /* Basically if the width of the window is smaller than the height,
+       the board is sized according to the width, else it's sized according to the height.
+       titleSize does something similar for the size of the title */
+    private int selectedTileX, selectedTileY;
+	
+    public GUI(Tiles[][] b) {
+	board = b;
 	setTitle("Scrabble");
 	setSize(900,900);
 	setLocation(100,100);
@@ -28,41 +38,82 @@ public class GUI extends JFrame {
 
 	// Just sets up some objects and puts it on the pane
 	pane = getContentPane();
+	mouseEvent mE = new mouseEvent();
 	canvas = new Canvas();
 	canvas.setPreferredSize(new Dimension(450,450));
 	canvas.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	canvas.setBackground(Color.DARK_GRAY);
+	canvas.addMouseListener(mE);
 	pane.add(canvas);
 	TextField name1, name2, name3, name4 = new TextField();
 	
 	
     }
     
+    private class mouseEvent implements MouseListener
+    {
+	
+
+
+	public void mouseReleased(MouseEvent e)
+	{
+ 
+	}
+
+	public void mouseEntered(MouseEvent e)
+	{
+       
+	}
+
+	public void mouseExited(MouseEvent e)
+	{
+   
+	}
+	public void mouseClicked(MouseEvent e)
+	{
+	}
+	
+	 
+
+	public void mousePressed(MouseEvent e)
+	{
+	    if (e.getX() > boardX && e.getY() > boardY && e.getY() < boardY + tileWidth * 15 && e.getX() < boardX + tileWidth * 15)
+		{
+		     selectedTileX = (e.getX() - boardX) / tileWidth;
+		     selectedTileY = (e.getY() - boardY) / tileWidth;
+		    
+		    board[selectedTileX][selectedTileY].setVisible(true);
+		    repaint();
+		}
+	}
+    }
+    
+    
     
     private class Canvas extends JPanel
     {
-	
+
 
 	public void paintComponent(Graphics g)
 	{
 	    
 	    super.paintComponent(g); // just adds the stuff from JPanel's version of paintComponent
 	    
-	    int tileWidth = 30; // tileWidth is created and given a default value
-	    int titleSize = 100;
 
-		/* Basically if the width of the window is smaller than the height,
-		the board is sized according to the width, else it's sized according to the height.
-		titleSize does something similar for the size of the title */
 	    if (getWidth() < getHeight())
 		{
 		     tileWidth = getWidth() / 25;
 		     titleSize = getWidth() / 12;
+		     boardX = getWidth() / 5;
+		     boardY = (getHeight() - tileWidth * 15) / 2;
 		}
 	    else
 		{
 		     tileWidth = getHeight() / 21;
 		     titleSize = getHeight() / 12;
+		     boardX = getHeight() / 3;
+		     boardY = (getHeight() - tileWidth * 15) / 2;
+		     
 		}
 
 	    // sets up the two different fonts
@@ -74,7 +125,8 @@ public class GUI extends JFrame {
 
 	    
 
-	    /* Defines the colors for a placed tile (a tile which has been scored/used), 
+	    /*
+	      Defines the colors for a placed tile (a tile which has been scored/used), 
 	       a visible tile (one which has been put on the board but not scored/used) 
 	       and a blank tile (a blank spot on the board
 	    */
@@ -85,10 +137,6 @@ public class GUI extends JFrame {
  
 
 	    
-	    /* Imports the board from the one in the GUI. This might lead to some 
-	       issues because there needs an instance of Board in the GUI class that's constantly updated. 
-	     */
-	    Tiles[][] board = b.getBoard();
 
 	    // Just examples of a visible tile and a placed tile
 	    board[5][5].setVisible(true);
@@ -108,16 +156,16 @@ public class GUI extends JFrame {
 	    g.drawString("by Sarah Chen and Nicholas Yang", (getWidth() - authorWidth) / 2, authorHeight + titleHeight + 4);
 	    
 	    // Drawing the overall red board before putting in the rectangles for the tile slots. 
-	    g.drawRect(getWidth() / 5, (getHeight() - tileWidth * 15) / 2, tileWidth * 15, tileWidth * 15);
+	    g.drawRect(boardX, boardY, tileWidth * 15, tileWidth * 15);
 	    g.setColor(Color.RED);
-	    g.fillRect(getWidth() / 5 , (getHeight() - tileWidth * 15) / 2, tileWidth * 15 + 2, tileWidth * 15 + 2);
+	    g.fillRect(boardX, boardY, tileWidth * 15 + 2, tileWidth * 15 + 2);
 
 	    // Remember, always set the color back to black after done painting
 	    g.setColor(Color.BLACK);
 
 
 	    // Draws the tileRack
-	    // g.drawRect
+	    g.drawRect(boardX + tileWidth * 3, boardY + tileWidth * 16, tileWidth * 7, tileWidth);
 
 	    // Usual double for loop for 2d arrays
 	    for (int i = 0; i < board.length; i++)
@@ -126,8 +174,9 @@ public class GUI extends JFrame {
 		    for (int j = 0; j < board[1].length; j++)
 			{
 			    // x and y coords for the tiles. Note that the upper left corner is 0,0
-			    int tileX = (getWidth() / 5) + 2 + i * tileWidth;
-			    int tileY = (getHeight() - tileWidth * 15) / 2 + 2 + j * tileWidth;
+			    board[i][j].setTileCoords(boardX + 2 + i * tileWidth, boardY + 2 + j * tileWidth);
+			    int tileX = board[i][j].getTileX();
+			    int tileY = board[i][j].getTileY();
 
 			    /*
 			      Gets the letter from the tile. Had to make it a string
@@ -183,6 +232,8 @@ public class GUI extends JFrame {
 			}
 		}
 	}
+
+	
 
 			       	
 

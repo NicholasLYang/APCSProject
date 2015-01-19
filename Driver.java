@@ -4,7 +4,7 @@ public class Driver
 
     public static void main(String[] args) {
 	Board b = new Board();
-	GUI x = new GUI(b);
+	GUI x = new GUI(b.getBoard());
 	x.setVisible(true);
 	/*
 	Player One = new Player(name1.getText());
