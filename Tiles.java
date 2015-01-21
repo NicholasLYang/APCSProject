@@ -24,6 +24,11 @@ public class Tiles {
 	letterBonus = l;
 	tileMode = t;
     }
+    public void clear()
+    {
+	points = 0;
+	letter = new String();
+    }
     public void setTileCoords (int x, int y)
     {
 	tileX = x;
@@ -54,14 +59,7 @@ public class Tiles {
     }
     public void setTileMode(int t)
     {
-	if (tileMode == 3)
-	    {
-		System.out.println("Error, this tile cannot be moved");
-	    }
-	else
-	    {
-		tileMode = t;
-	    }
+	tileMode = t;
     }
 	
 
@@ -73,12 +71,17 @@ public class Tiles {
 
     
     //sets the Tile to a certain amount of points
-    public void setPoints(int i) {
+    public void addPoints(int i) {
 	int newPoints = 0;
 	newPoints = i;
 	newPoints = i * letterBonus;
 	points = points + newPoints;
     }
+    public void setPoints(int p)
+    {
+	points = p;
+    }
+	    
 
     //returns Word Bonus
     public int getWBonus() {

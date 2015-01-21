@@ -53,9 +53,9 @@ public class GUI extends JFrame {
     private class mouseEvent implements MouseListener
     {
 	
-	Tiles selectedTile;
-	boolean isTileSelected = false; 
-
+	Tiles previouslySelectedTile; // Previously selected tile
+	boolean isTileSelected = false; 	// Has there been a tile selected already? 
+	int pSX, pSY;
 	public void mouseReleased(MouseEvent e)
 	{
  
@@ -70,37 +70,63 @@ public class GUI extends JFrame {
 	{
    
 	}
-	public void mouseClicked(MouseEvent e)
+	public void mousePressed(MouseEvent e)
 	{
 	}
 	
 	 
 
-	public void mousePressed(MouseEvent e)
+	public void mouseClicked(MouseEvent e)
 	{
-	    
+	    /*
+	      If you click on a tile, it's highlighted 
+	      and the next time you click on a tile it's moved, 
+	      unless the spot you click on is another tile
+	    */
+
+	    // Is the mouse within the bounds of the board?
 	    if (e.getX() > boardX && e.getY() > boardY && e.getY() < boardY + tileWidth * 15 && e.getX() < boardX + tileWidth * 15)
 		{
-		     
-		     selectedTileX = (e.getX() - boardX) / tileWidth;
-		     selectedTileY = (e.getY() - boardY) / tileWidth;
-		     if (isTileSelected && board[selectedTileX][selectedTileY].getTileMode() == 0)
+		    /*
+		      Selected tile's coordinates are determined by division.
+		      Subtract the board from its coordinate 
+		      then divide by tileWidth to get number of tile
+		    */
+		    selectedTileX = (e.getX() - boardX) / tileWidth;
+		    selectedTileY = (e.getY() - boardY) / tileWidth;
+		     // Basically if the tile you selected is movable 
+		     if (board[selectedTileX][selectedTileY].getTileMode() == 2)
+				 {
+				     // Then save it under the variable previouslySelectedTile
+				     previouslySelectedTile = board[selectedTileX][selectedTileY];
+				     // With the coords as well
+				    
+				      pSX = selectedTileX;
+				      pSY = selectedTileY;
+				     board[selectedTileX][selectedTileY].setTileMode(1);
+
+				     System.out.println("Tile" + selectedTileX + " , " + selectedTileY + " with tile mode " + previouslySelectedTile.getTileMode());
+				     isTileSelected = true;
+				     canvas.repaint();
+				     
+				 }
+		     // If you've already selected a tile and the spot you're clicking on is free
+		    else if (isTileSelected && board[selectedTileX][selectedTileY].getTileMode() == 0)
 			{
-				    board[selectedTileX][selectedTileY].setLetter(selectedTile.getLetter());
-				    selectedTile.setTileMode(0);
-				    repaint();
+			    Tiles temp = board[selectedTileX][selectedTileY];
+			    board[selectedTileX][selectedTileY] = previouslySelectedTile;
+			    board[pSX][pSY].setTileMode(0);
+				  
+			    isTileSelected = false;
+			    System.out.println("Tile moved!");
+			    canvas.repaint();
 			}
 
-		     else
-			 {
-			     board[selectedTileX][selectedTileY].setTileMode(3);
-			     selectedTile = board[selectedTileX][selectedTileY];
-			     isTileSelected = true;
-			     repaint();
-			 }
+		      
 		}
 	}
     }
+    
     
     
     
@@ -132,9 +158,11 @@ public class GUI extends JFrame {
 
 	    // sets up the two different fonts
 	    Font letterFont = new Font ("SansSerif", Font.BOLD, tileWidth / 2);
-	    Font pointFont = new Font("SansSerif", Font.BOLD, tileWidth / 3);
+	    Font pointFont = new Font("SansSerif", Font.BOLD, tileWidth * 2 / 7);
 	    Font titleFont = new Font("SansSerif", Font.BOLD, titleSize);
-	    
+	    FontMetrics authors = g.getFontMetrics(letterFont);
+	    FontMetrics title = g.getFontMetrics(titleFont);
+	    FontMetrics points = g.getFontMetrics(pointFont);
 	    g.setFont(letterFont);
 
 	    
@@ -144,24 +172,22 @@ public class GUI extends JFrame {
 	       a visible tile (one which has been put on the board but not scored/used) 
 	       and a blank tile (a blank spot on the board
 	    */
-	    Color placedTile = new Color(206, 163, 132);
+	    Color scoredTile = new Color(206, 163, 132);
 	    Color visibleTile = new Color(239, 194, 155);
 	    Color blankTile = new Color(84, 84, 84);
-	    Color selectedTile = new Color(234, 214, 185);
+	    Color selectedTile = new Color(255, 0, 0);
  
 
 	    
 
 	    // Just examples of a visible tile and a placed tile
-	    board[5][5].setTileMode(1);
-	    board[6][6].setTileMode(2);
-	    board[7][7].setTileMode(3);
+	    board[5][5].setTileMode(2);
+	    board[5][5].setLetter("X");
 
 	    // Draws the title and author names. Letter font is used for authors names because it's the right size
-	    FontMetrics title = g.getFontMetrics(titleFont);
+	   
 	    int titleWidth = title.stringWidth("Scrabble");
 	    int titleHeight = title.getAscent();
-	    FontMetrics authors = g.getFontMetrics(letterFont);
 	    int authorWidth = authors.stringWidth("by Sarah Chen and Nicholas Yang");
 	    int authorHeight = authors.getAscent();
 		
@@ -208,18 +234,20 @@ public class GUI extends JFrame {
 			   
 			    switch (board[i][j].getTileMode())
 				{
+				case 0:
+				    g.setColor(blankTile);
+				    break;
 				case 1: 
-				    g.setColor(visibleTile);
+				    g.setColor(selectedTile);
 				    break;
 				
 				case 2: 
-				    g.setColor(placedTile);
-				    break;
-				case 3:
 				    g.setColor(visibleTile);
 				    break;
+				case 3:
+				    g.setColor(scoredTile);
+				    break;
 				default:
-				    g.setColor(blankTile);
 				    break;
 				    
 				}
@@ -235,7 +263,7 @@ public class GUI extends JFrame {
 
 					    // Draws the point value on the tile
 					    g.setFont(pointFont);
-					    g.drawString(p, tileX + (tileWidth * 5 / 8), tileY + (tileWidth * 3 / 4));
+					    g.drawString(p, tileX + (tileWidth * 7 / 8) - points.stringWidth(p)  , tileY + (tileWidth * 3 / 4));
 					}
 					
 			}
