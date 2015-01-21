@@ -12,6 +12,8 @@ public class Tiles {
 	points = 0;
 	tileMode = 0;
 	values = new LetterVal();
+	wordBonus = 1;
+	letterBonus = 1;
     }
     
     public Tiles(int w, int l, int t) {

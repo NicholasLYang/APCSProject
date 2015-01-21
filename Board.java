@@ -8,9 +8,9 @@ public class Board {
     // --- Constructor
     public Board() {
 	board = new Tiles[15][15];
-	for(int r=0; r<board.length;r++) {
-	    for(int c=0; c<board.length; c++) {
-		board[r][c] = new Tiles();
+	for(int x=0; x<board.length;x++) {
+	    for(int y=0; y<board.length; y++) {
+		board[x][y] = new Tiles();
 	    }
 	}
     }
@@ -21,9 +21,9 @@ public class Board {
     }
 
     // --- Gives a Tile on the board a letter
-    public void assignLetter(String l, int r, int c) {
-	board[r][c].setLetter(l);
-	board[r][c].setTileMode(2);
+    public void assignLetter(String l, int x, int y) {
+	board[x][y].setLetter(l);
+	board[x][y].setTileMode(2);
     }
 
     // --- Checks if the word made is valid
@@ -101,15 +101,31 @@ public class Board {
 	return points;
     }
 
-    // For testing purposes
+    /*
+    // --- FOR TESTING PURPOSES
+
+    public String getLetter(int x, int y) {
+	return board[x][y].getLetter();
+    }
+
+    public Tiles getTile(int x, int y) {
+	return board[x][y];
+    }
+
     public static void main(String[] args) {
 	Board board = new Board();
-	board.assignLetter("H",1,2);
-	board.assignLetter("E",1,3);
-	board.assignLetter("L",1,4);
-	board.assignLetter("L",1,5);
-	board.assignLetter("O",1,6);
-	System.out.println(board.getPoints());
+	board.assignLetter("H",1,1);
+	board.assignLetter("E",2,1);
+	board.assignLetter("L",3,1);
+	board.assignLetter("L",4,1);
+	board.assignLetter("O",5,1);	
+	System.out.println(board.getTile(1,1).getPoints());
+	System.out.println(board.getTile(2,1).getPoints());
+	System.out.println(board.getTile(3,1).getPoints());
+	System.out.println(board.getTile(4,1).getPoints());
+	System.out.println(board.getTile(5,1).getPoints());
+	System.out.println(board.getPointsH(1,1));
     }
+    */
 
 }

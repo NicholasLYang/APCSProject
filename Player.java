@@ -12,6 +12,10 @@ public class Player {
 	return score;
     }
 
+    public void setScore(int points) {
+	score = points;
+    }
+
     public void placeLetter(Board b, char l, int r, int c) {
 	b.assignLetter(l, r, c);
     }
