@@ -8,10 +8,6 @@ public class Tiles {
     private int tileX;
     private int tileY;
 	
-
-
-      
-
     public Tiles() {
 	points = 0;
 	tileMode = 0;
@@ -103,6 +99,11 @@ public class Tiles {
 	setPoints(values.getVal(l.charAt(0)));
 	letter = l;
 	
+    }
+
+    //for testing
+    public static void main(String[] args) {
+
     }
 
 

@@ -13,7 +13,6 @@ public class Board {
 		board[r][c] = new Tiles();
 	    }
 	}
-	sc = new Scanner("words.txt");
     }
     
     // --- returns the Board
@@ -24,74 +23,79 @@ public class Board {
     // --- Gives a Tile on the board a letter
     public void assignLetter(String l, int r, int c) {
 	board[r][c].setLetter(l);
+	board[r][c].setTileMode(2);
     }
 
     // --- Checks if the word made is valid
     public boolean checkWord(String word) {
-	while(sc.hasNext()) {
-	    if(sc.nextLine().equals(word)) {
-		return true;
+	File file = new File("words.txt");
+        try {
+	    sc = new Scanner(file);
+	    while(sc.hasNextLine()) {
+		if(sc.nextLine().equals(word)) {
+		    return true;
+		}
 	    }
+	}
+	catch (FileNotFoundException e) {
+	    e.printStackTrace();
 	}
 	return false;
     }
 
+    public int getPointsH(int xcoor, int ycoor) {
+	String word = "";
+	int x = xcoor;
+	int y = ycoor;
+	int WordPoints = 0;
+	int bonus = 1;
+
+	while(board[x][y].getTileMode() != 0) {
+	    word = word + board[x][y].getLetter();
+	    WordPoints = WordPoints + board[x][y].getPoints();
+	    bonus = bonus * board[x][y].getWBonus();
+	    x++;
+	}
+	WordPoints = WordPoints * bonus;
+	
+        if(checkWord(word)) {
+	    return WordPoints;
+	}
+	return 0;
+    }
+
+    public int getPointsV(int xcoor, int ycoor) {
+	String word = "";
+	int x = xcoor;
+	int y = ycoor;
+	int WordPoints = 0;
+	int bonus = 1;
+
+	while(board[x][y].getTileMode() != 0) {
+	    word = word + board[x][y].getLetter();
+	    WordPoints = WordPoints + board[x][y].getPoints();
+	    bonus = bonus * board[x][y].getWBonus();
+	    y++;
+	}
+	WordPoints = WordPoints * bonus;
+	
+	if(checkWord(word)) {
+	    return WordPoints;
+	}
+	return 0;
+    }
+
     // --- Finds which words to calculate points for
     public int getPoints() {
-	// Lists of all the new tiles + total points
-	ArrayList<Integer> x = new ArrayList<Integer>();
-	ArrayList<Integer> y = new ArrayList<Integer>();
-	int points = 0;
-
-	// adds the coordinates of the new Tiles
-	for(int i = 0; i<board.length; i++) {
-	    for(int j = 0; j<board[i].length; j++) {
-		if(board[i][j].getVisible() && board[i][j].getPlaced() == false) {
-		    x.add(i);
-		    y.add(j);
+        int points = 0;
+	
+	for(int x=0; x<board.length; x++) {
+	    for(int y = 0; y<board.length; y++) {
+		if(board[x][y].getTileMode()==2) {
+		    points = points + getPointsH(x, y);
+		    points = points + getPointsV(x, y);
+		    board[x][y].setTileMode(3);
 		}
-	    }
-	}
-
-	// Checks the possibilities for words
-	for(int index = 0;index<x.size(); index++) {
-
-	    // Calculating Horizontal Word
-	    int tmpx = x.get(index);
-	    int tmpy = y.get(index);
-	    String word = "";
-	    int Wpoints = 0; // points per word
-	    int bonus = 1;
-	    
-	    while(board[tmpx][tmpy] != null) {
-		word = word + board[tmpx][tmpy];
-		Wpoints = Wpoints + board[tmpx][tmpy].getPoints();
-		bonus = bonus * board[tmpx][tmpy].getWBonus();
-		tmpy++;
-	    }
-
-	    if(checkWord(word)) {
-	        Wpoints = Wpoints * bonus;
-		points = points + Wpoints;
-	    }
-
-	    //Calculating Vertical Word
-	    tmpx = x.get(index);
-	    tmpy = y.get(index);
-	    word = "";
-	    Wpoints = 0; // points per word
-	    bonus = 1;
-	    
-	    while(board[tmpx][tmpy] != null) {
-		word = word + board[tmpx][tmpy];
-		Wpoints = Wpoints + board[tmpx][tmpy].getPoints();
-		bonus = bonus * board[tmpx][tmpy].getWBonus();
-		tmpx++;
-	    }
-	    
-	    if(checkWord(word)) {
-	        Wpoints = Wpoints * bonus;
-		points = points + Wpoints;
 	    }
 	}
 	return points;
@@ -105,18 +109,7 @@ public class Board {
 	board.assignLetter("L",1,4);
 	board.assignLetter("L",1,5);
 	board.assignLetter("O",1,6);
-	File file = new File("words.txt");
-	
-	try {
-	    Scanner scan = new Scanner(file);
-	    while (scan.hasNextLine()) {
-		System.out.println(scan.nextLine());
-	    }
-	}
-	catch (FileNotFoundException e) {
-	    e.printStackTrace();
-	}
-
+	System.out.println(board.getPoints());
     }
 
 }
