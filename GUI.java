@@ -233,14 +233,16 @@ public class GUI extends JFrame {
 	    g.setColor(Color.BLACK);
 	    g.setFont(letterFont);
 	    g.drawString(players.get(turn).getName(), boardX + tileWidth * 4, boardY + tileWidth * 18);
-	    for (int i = 0; i < 7; i++)
+	    
+	    for (int i = 0; i < players.get(turn).getRack().size() ; i++)
 		{
-		    tileX = boardX + tileWidth * (3 + i);
-		    tileY = boardY + tileWidth * 16;
+		    tileX = boardX + tileWidth * (3 + i) + 1;
+		    tileY = boardY + tileWidth * 16 + 1;
 		    ArrayList<Tiles> rack = players.get(turn).getRack();
 		    this.paintTiles(g, tileX, tileY, rack.get(i));
 	    
 		}
+	    
 	}
 	public void paintTiles (Graphics g, int tileX, int tileY, Tiles t)
 	{

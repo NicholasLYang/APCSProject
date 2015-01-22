@@ -8,7 +8,9 @@ public class Driver
     public static void main(String[] args) {
 	Board b = new Board();
 	Tiles[][] board = b.getBoard();
-	ArrayList<Player> players = new ArrayList<Player>(); 
+
+
+	ArrayList<Player> players = new ArrayList<Player>();
 	Scanner sc = new Scanner(System.in);
 	System.out.println("Player 1 Name?");
 	Player p1 = new Player(sc.nextLine());
