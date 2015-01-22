@@ -13,36 +13,56 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
+import java.util.ArrayList; 
 
 public class GUI extends JFrame {
     private Container pane;
     private JTextField name1,name2,name3,name4;
     public Canvas canvas;
+    private int turn; 
     private Tiles[][] board; // the board array needs to be updated whenever something happens. 
-    private Player p1;
+    private ArrayList<Player> players;
     private int tileWidth = 30; // tileWidth is created and given a default value
     private int titleSize = 100;
     private int boardX = 100;
     private int boardY = 100;
+    public int tileX, tileY;
+    private Color background = new Color (128, 128, 128);
+    private Font letterFont;
+    private Font pointFont;
+    private Font titleFont;
+    public FontMetrics points;
+    public FontMetrics title;
+    public FontMetrics authors;
+    /*
+      Defines the colors for a placed tile (a tile which has been scored/used), 
+      a visible tile (one which has been put on the board but not scored/used) 
+      and a blank tile (a blank spot on the board
+    */
+    Color scoredTile = new Color(206, 163, 132);
+    Color visibleTile = new Color(239, 194, 155);
+    Color blankTile = new Color(84, 84, 84);
+    Color selectedTile = new Color(255, 0, 0);
+ 
     /* Basically if the width of the window is smaller than the height,
        the board is sized according to the width, else it's sized according to the height.
        titleSize does something similar for the size of the title */
     private int selectedTileX, selectedTileY;
 	
-    public GUI(Tiles[][] b) {
+    public GUI(Tiles[][] b, ArrayList<Player> p) {
 	board = b;
+	players = p; 
 	setTitle("Scrabble");
 	setSize(900,900);
 	setLocation(100,100);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+	turn = 1;
 	// Just sets up some objects and puts it on the pane
 	pane = getContentPane();
 	mouseEvent mE = new mouseEvent();
 	canvas = new Canvas();
 	canvas.setPreferredSize(new Dimension(450,450));
-	canvas.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-	canvas.setBackground(Color.DARK_GRAY);
+	canvas.setBackground(background);
 	canvas.addMouseListener(mE);
 	pane.add(canvas);
 	TextField name1, name2, name3, name4 = new TextField();
@@ -136,7 +156,8 @@ public class GUI extends JFrame {
 	{
 	    
 	    super.paintComponent(g); // just adds the stuff from JPanel's version of paintComponent
-	    
+
+
 
 	    if (getWidth() < getHeight())
 		{
@@ -154,27 +175,16 @@ public class GUI extends JFrame {
 		     
 		}
 
-	    // sets up the two different fonts
-	    Font letterFont = new Font ("SansSerif", Font.BOLD, tileWidth / 2);
-	    Font pointFont = new Font("SansSerif", Font.BOLD, tileWidth * 2 / 7);
-	    Font titleFont = new Font("SansSerif", Font.BOLD, titleSize);
-	    FontMetrics authors = g.getFontMetrics(letterFont);
-	    FontMetrics title = g.getFontMetrics(titleFont);
-	    FontMetrics points = g.getFontMetrics(pointFont);
+
+
 	    g.setFont(letterFont);
 
-	    
-
-	    /*
-	      Defines the colors for a placed tile (a tile which has been scored/used), 
-	       a visible tile (one which has been put on the board but not scored/used) 
-	       and a blank tile (a blank spot on the board
-	    */
-	    Color scoredTile = new Color(206, 163, 132);
-	    Color visibleTile = new Color(239, 194, 155);
-	    Color blankTile = new Color(84, 84, 84);
-	    Color selectedTile = new Color(255, 0, 0);
- 
+	    letterFont = new Font ("SansSerif", Font.BOLD, tileWidth / 2);
+	    pointFont = new Font("SansSerif", Font.BOLD, tileWidth * 2 / 7);
+	    titleFont = new Font("SansSerif", Font.BOLD, titleSize);
+	    authors = g.getFontMetrics(letterFont);
+	    title = g.getFontMetrics(titleFont);
+	    points = g.getFontMetrics(pointFont); 
 
 	    
 
@@ -201,8 +211,6 @@ public class GUI extends JFrame {
 	    g.setColor(Color.BLACK);
 
 
-	    // Draws the tileRack
-	    g.drawRect(boardX + tileWidth * 3, boardY + tileWidth * 16, tileWidth * 7, tileWidth);
 
 	    // Usual double for loop for 2d arrays
 	    for (int i = 0; i < board.length; i++)
@@ -212,60 +220,76 @@ public class GUI extends JFrame {
 			{
 			    // x and y coords for the tiles. Note that the upper left corner is 0,0
 			    board[i][j].setTileCoords(boardX + 2 + i * tileWidth, boardY + 2 + j * tileWidth);
-			    int tileX = board[i][j].getTileX();
-			    int tileY = board[i][j].getTileY();
-
-			    /*
-			      Gets the letter from the tile. Had to make it a string
-			      because chars are annoying to draw. Plus it's easier to
-			      turn a string into a char than vice versa
-			    */
-			    String l = board[i][j].getLetter();
-			    String p = "" + board[i][j].getPoints();
-			    
-
-			    // Draws outline for tile slot
-			    g.drawRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
-			    // Depending on variables from the tile, it paints with one of the three different colors
-			   
-			    switch (board[i][j].getTileMode())
-				{
-				case 0:
-				    g.setColor(blankTile);
-				    break;
-				case 1: 
-				    g.setColor(selectedTile);
-				    break;
-				
-				case 2: 
-				    g.setColor(visibleTile);
-				    break;
-				case 3:
-				    g.setColor(scoredTile);
-				    break;
-				default:
-				    break;
-				    
-				}
-				    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
-				    g.setColor(Color.BLACK);
-				   
-				    if (board[i][j].getTileMode() != 0)
-					{
-					    // Draws the letter on the tile
-					    g.setFont(letterFont);
-					    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
-					
-
-					    // Draws the point value on the tile
-					    g.setFont(pointFont);
-					    g.drawString(p, tileX + (tileWidth * 7 / 8) - points.stringWidth(p)  , tileY + (tileWidth * 3 / 4));
-					}
+			     tileX = boardX + tileWidth * i + 2;
+			     tileY = boardY + tileWidth * j + 2;
+			    this.paintTiles(g, tileX, tileY, board[i][j]); 
 					
 			}
 		}
+	    // Draws the tileRack
+	    g.drawRect(boardX + tileWidth * 3, boardY + tileWidth * 16, tileWidth * 7, tileWidth);
+	    g.setColor(Color.RED);
+	    g.fillRect(boardX + tileWidth * 3, boardY + tileWidth * 16, tileWidth * 7, tileWidth);
+	    g.setColor(Color.BLACK);
+	    g.setFont(letterFont);
+	    g.drawString(players.get(turn).getName(), boardX + tileWidth * 4, boardY + tileWidth * 18);
+	    for (int i = 0; i < 7; i++)
+		{
+		    tileX = boardX + tileWidth * (3 + i);
+		    tileY = boardY + tileWidth * 16;
+		    ArrayList<Tiles> rack = players.get(turn).getRack();
+		    this.paintTiles(g, tileX, tileY, rack.get(i));
+	    
+		}
 	}
+	public void paintTiles (Graphics g, int tileX, int tileY, Tiles t)
+	{
+	    /*
+	      Gets the letter from the tile. Had to make it a string
+	      because chars are annoying to draw. Plus it's easier to
+	      turn a string into a char than vice versa
+	    */
+			    
+	    String l = t.getLetter();
+	    String p = "" + t.getPoints();
+	    // Draws outline for tile slot
+	    g.drawRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
+	    // Depending on variables from the tile, it paints with one of the three different colors
+			   
+	    switch (t.getTileMode())
+		{
+		case 0:
+		    g.setColor(blankTile);
+		    break;
+		case 1: 
+		    g.setColor(selectedTile);
+		    break;
+				
+		case 2: 
+		    g.setColor(visibleTile);
+		    break;
+		case 3:
+		    g.setColor(scoredTile);
+		    break;
+		default:
+		    break;
+				    
+		}
+	    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
+	    g.setColor(Color.BLACK);
+				   
+	    if (t.getTileMode() != 0)
+		{
+		    // Draws the letter on the tile
+		    g.setFont(letterFont);
+		    g.drawString(l, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
+					
 
+		    // Draws the point value on the tile
+		    g.setFont(pointFont);
+		    g.drawString(p, tileX + (tileWidth * 7 / 8) - points.stringWidth(p)  , tileY + (tileWidth * 3 / 4));
+		}
+	}
 	
 
 			       	

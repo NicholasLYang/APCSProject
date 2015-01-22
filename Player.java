@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Player {
     static ArrayList<Tiles> Tiles;
@@ -9,12 +10,16 @@ public class Player {
 	Tiles = new ArrayList<Tiles>();	
 	score = 0;
 	name = n;
-	Rack = new ArrayList<Tiles>;
+	Rack = new ArrayList<Tiles>();
 	
     }
 
     public int getScore() {
 	return score;
+    }
+    public String getName()
+    {
+	return name;
     }
 
     public void setScore(int points) {
@@ -24,5 +29,10 @@ public class Player {
     public void placeLetter(Board b, String l, int r, int c) {
 	b.assignLetter(l, r, c);
     }
+    public ArrayList<Tiles> getRack()
+    {
+	return Rack;
+    }
+    
 
 }
