@@ -20,11 +20,7 @@ public class Tiles {
 	letterBonus = l;
 	tileMode = t;
     }
-    public void clear()
-    {
-	points = 0;
-	letter = new String();
-    }
+
     public void setTileCoords (int x, int y)
     {
 	tileX = x;

@@ -53,9 +53,9 @@ public class GUI extends JFrame {
     private class mouseEvent implements MouseListener
     {
 	
-	Tiles previouslySelectedTile; // Previously selected tile
+	String temp; // Temp location of the letter that is selected
 	boolean isTileSelected = false; 	// Has there been a tile selected already? 
-	int pSX, pSY;
+	int tempX, tempY;
 	public void mouseReleased(MouseEvent e)
 	{
  
@@ -98,32 +98,30 @@ public class GUI extends JFrame {
 		     if (board[selectedTileX][selectedTileY].getTileMode() == 2)
 				 {
 				     // Then save it under the variable previouslySelectedTile
-				     previouslySelectedTile = board[selectedTileX][selectedTileY];
+				     temp = board[selectedTileX][selectedTileY].getLetter();
 				     // With the coords as well
+				     // pSX = x coordinate of previously selected tile 
 				    
-				      pSX = selectedTileX;
-				      pSY = selectedTileY;
+				      tempX = selectedTileX;
+				      tempY = selectedTileY;
 				     board[selectedTileX][selectedTileY].setTileMode(1);
-
-				     System.out.println("Tile" + selectedTileX + " , " + selectedTileY + " with tile mode " + previouslySelectedTile.getTileMode());
 				     isTileSelected = true;
-				     canvas.repaint();
+				     canvas.update(canvas.getGraphics());
 				     
 				 }
 		     // If you've already selected a tile and the spot you're clicking on is free
 		    else if (isTileSelected && board[selectedTileX][selectedTileY].getTileMode() == 0)
 			{
-			    Tiles temp = board[selectedTileX][selectedTileY];
-			    board[selectedTileX][selectedTileY] = previouslySelectedTile;
-			    board[pSX][pSY].setTileMode(0);
-				  
+			    board[selectedTileX][selectedTileY].setLetter(temp);
+			    board[tempX][tempY].setTileMode(0);
+			    board[selectedTileX][selectedTileY].setTileMode(2);
 			    isTileSelected = false;
-			    System.out.println("Tile moved!");
-			    canvas.repaint();
+			    canvas.update(canvas.getGraphics());
 			}
 
 		      
 		}
+	    // Well is the mouse in the tile rack?
 	}
     }
     
@@ -181,9 +179,7 @@ public class GUI extends JFrame {
 	    
 
 	    // Just examples of a visible tile and a placed tile
-	    board[5][5].setTileMode(2);
-	    board[5][5].setLetter("X");
-
+	 
 	    // Draws the title and author names. Letter font is used for authors names because it's the right size
 	   
 	    int titleWidth = title.stringWidth("Scrabble");
