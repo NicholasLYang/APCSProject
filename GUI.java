@@ -56,7 +56,7 @@ public class GUI extends JFrame {
 	setSize(900,900);
 	setLocation(100,100);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
-	turn = 1;
+	turn = 0;
 	// Just sets up some objects and puts it on the pane
 	pane = getContentPane();
 	mouseEvent mE = new mouseEvent();
@@ -73,9 +73,10 @@ public class GUI extends JFrame {
     private class mouseEvent implements MouseListener
     {
 	
-	String temp; // Temp location of the letter that is selected
+	String temp = new String(); // Temp location of the letter that is selected
 	boolean isTileSelected = false; 	// Has there been a tile selected already? 
 	int tempX, tempY;
+	int rackX = -1;
 	public void mouseReleased(MouseEvent e)
 	{
  
@@ -104,45 +105,86 @@ public class GUI extends JFrame {
 	      unless the spot you click on is another tile
 	    */
 
+	  
+	    int selectedX = 0;
+	    int selectedY = 0;
 	    // Is the mouse within the bounds of the board?
 	    if (e.getX() > boardX && e.getY() > boardY && e.getY() < boardY + tileWidth * 15 && e.getX() < boardX + tileWidth * 15)
 		{
+		    
+		    selectedX = (e.getX() - boardX)/tileWidth;
+		    selectedY = (e.getY() - boardY)/tileWidth;
 		    /*
 		      Selected tile's coordinates are determined by division.
 		      Subtract the board from its coordinate 
 		      then divide by tileWidth to get number of tile
 		    */
-		    selectedTileX = (e.getX() - boardX) / tileWidth;
-		    selectedTileY = (e.getY() - boardY) / tileWidth;
-		     // Basically if the tile you selected is movable 
-		     if (board[selectedTileX][selectedTileY].getTileMode() == 2)
-				 {
-				     // Then save it under the variable previouslySelectedTile
-				     temp = board[selectedTileX][selectedTileY].getLetter();
-				     // With the coords as well
-				     // pSX = x coordinate of previously selected tile 
-				    
-				      tempX = selectedTileX;
-				      tempY = selectedTileY;
-				     board[selectedTileX][selectedTileY].setTileMode(1);
-				     isTileSelected = true;
-				     canvas.update(canvas.getGraphics());
-				     
-				 }
-		     // If you've already selected a tile and the spot you're clicking on is free
-		    else if (isTileSelected && board[selectedTileX][selectedTileY].getTileMode() == 0)
-			{
-			    board[selectedTileX][selectedTileY].setLetter(temp);
-			    board[tempX][tempY].setTileMode(0);
-			    board[selectedTileX][selectedTileY].setTileMode(2);
+		    if (isTileSelected && board[selectedX][selectedY].getTileMode() == 0)
+			{				     		
+			    // If you've already selected a tile and the spot you're clicking on is free
+			    board[selectedX][selectedY].setLetter(temp);
+			    board[selectedX][selectedY].setTileMode(2);
+			    try
+				{
+				    players.get(turn).getRack().get(rackX).setTileMode(0);
+				    rackX = -1;
+				}
+			    catch (IndexOutOfBoundsException f)
+				{
+				    board[tempX][tempY].setTileMode(0);
+				}
 			    isTileSelected = false;
 			    canvas.update(canvas.getGraphics());
 			}
+		    else
+			{
+			    temp = board[selectedX][selectedY].getLetter();
+			    tempX = selectedX;
+			    tempY = selectedY;
+			    board[selectedX][selectedY].setTileMode(1);
+			    isTileSelected = true;
+			    canvas.update(canvas.getGraphics());
+			}
+		  
+		}
+	    if (e.getX() > boardX + tileWidth * 3 && e.getY() > boardY + tileWidth * 16 && e.getX() < boardX + tileWidth * 10 && e.getY() < boardY + tileWidth * 17)
+		{
+		    selectedX = (e.getX() - (boardX + tileWidth * 3))/tileWidth;
+		    if (isTileSelected && players.get(turn).getRack().get(selectedX).getTileMode() == 0)
+			{
+			    players.get(turn).getRack().get(selectedX).setLetter(temp);
+			    try
+				{
+				    players.get(turn).getRack().get(rackX).setTileMode(0);
+				}
+			    catch (IndexOutOfBoundsException f)
+				{
+				    board[tempX][tempY].setTileMode(0);
+				}
+			    canvas.update(canvas.getGraphics());
+			    rackX = -1;
+
+			}
+		    else
+			{
+			    
+			    rackX = (e.getX() - (boardX + tileWidth * 3))/tileWidth;
+			    players.get(turn).getRack().get(selectedX).setTileMode(1);
+			    temp = players.get(turn).getRack().get(selectedX).getLetter();
+			    isTileSelected = true;
+			    canvas.update(canvas.getGraphics());	
+			}
+					  
+		}
+
+	}
+
+
+		
 
 		      
-		}
-	    // Well is the mouse in the tile rack?
-	}
+	
+
     }
     
     

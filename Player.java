@@ -9,66 +9,72 @@ public class Player {
     private String name;
     private ArrayList<Tiles> Rack;
     private Random rng;
-    private static ArrayList<Tiles> AvailTiles;
+    private static ArrayList<String> AvailTiles;
     
     public Player(String n) {	
 	score = 0;
 	name = n;
-	Rack = new ArrayList<Tiles>();	
+	Rack = new ArrayList<Tiles>(7);
+	for (int i = 0; i < 7; i++)
+	    {
+		Rack.add(new Tiles());
+	    }
 	rng = new Random();
-	ArrayList<Tiles> AvailTiles = new ArrayList<Tiles>();
+	AvailTiles = new ArrayList<String>();
 	for(int i=0;i<12; i++) {
-	    AvailTiles.add(new Tiles("E"));
+	    AvailTiles.add("E");
 	}
 	for(int i=0;i<9;i++) {
-	    AvailTiles.add(new Tiles("A"));
-	    AvailTiles.add(new Tiles("I"));
+	    AvailTiles.add("A");
+	    AvailTiles.add("I");
 	}
 	for(int i=0;i<8;i++) {
-	    AvailTiles.add(new Tiles("O"));
+	    AvailTiles.add("O");
 	}
 	for(int i=0;i<6;i++) {
-	    AvailTiles.add(new Tiles("N"));
-	    AvailTiles.add(new Tiles("R"));
-	    AvailTiles.add(new Tiles("T"));
+	    AvailTiles.add("N");
+	    AvailTiles.add("R");
+	    AvailTiles.add("T");
 	}
 	for(int i=0;i<4;i++) {
-	    AvailTiles.add(new Tiles("L"));
-	    AvailTiles.add(new Tiles("S"));
-	    AvailTiles.add(new Tiles("U"));
-	    AvailTiles.add(new Tiles("D"));
+	    AvailTiles.add("L");
+	    AvailTiles.add("S");
+	    AvailTiles.add("U");
+	    AvailTiles.add("D");
 	}
 	for(int i=0;i<3;i++) {
-	    AvailTiles.add(new Tiles("G"));
+	    AvailTiles.add("G");
 	}
 	for(int i=0;i<2;i++) {
-	    AvailTiles.add(new Tiles("B"));
-	    AvailTiles.add(new Tiles("C"));
-	    AvailTiles.add(new Tiles("M"));
-	    AvailTiles.add(new Tiles("P"));
-	    AvailTiles.add(new Tiles("F"));
-	    AvailTiles.add(new Tiles("H"));
-	    AvailTiles.add(new Tiles("V"));
-	    AvailTiles.add(new Tiles("W"));
-	    AvailTiles.add(new Tiles("Y"));
+	    AvailTiles.add("B");
+	    AvailTiles.add("C");
+	    AvailTiles.add("M");
+	    AvailTiles.add("P");
+	    AvailTiles.add("F");
+	    AvailTiles.add("H");
+	    AvailTiles.add("V");
+	    AvailTiles.add("W");
+	    AvailTiles.add("Y");
 	}
 	for(int i=0;i<1;i++) {
-	    AvailTiles.add(new Tiles("K"));
-	    AvailTiles.add(new Tiles("J"));
-	    AvailTiles.add(new Tiles("X"));
-	    AvailTiles.add(new Tiles("Q"));
-	    AvailTiles.add(new Tiles("Z"));
+	    AvailTiles.add("K");
+	    AvailTiles.add("J");
+	    AvailTiles.add("X");
+	    AvailTiles.add("Q");
+	    AvailTiles.add("Z");
 	}
 
-	for(int i=0;i<7;i++) {
-	    Rack.add(AvailTiles.remove(rng.nextInt(AvailTiles.size())));
-	}
+
 	
     }
     
-    public void rackRefill(ArrayList<Tiles> AvailTiles) {
+    public void rackRefill() {
 	for(int i=0;i<7;i++) {
-	    Rack.add(AvailTiles.remove(rng.nextInt(AvailTiles.size())));
+	    Tiles t = Rack.remove(0);
+	    t.setLetter(AvailTiles.remove(rng.nextInt(AvailTiles.size())));
+	    t.setTileMode(2);
+	    Rack.add(t);
+		
 	}
     }
 
@@ -90,6 +96,10 @@ public class Player {
     public ArrayList<Tiles> getRack()
     {
 	return Rack;
+    }
+    public void setRack(ArrayList<Tiles> r)
+    {
+	Rack = r;
     }
     
 

@@ -26,7 +26,7 @@ public class Tiles {
 
     public Tiles(String l) {
 	points = 0;
-	tileMode = 0;
+	tileMode = 2;
 	values = new LetterVal();
 	wordBonus = 1;
 	letterBonus = 1;
