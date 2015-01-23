@@ -9,8 +9,10 @@ public class Player {
     private String name;
     private ArrayList<Tiles> Rack;
     private Random rng;
-    private static ArrayList<String> AvailTiles;
-    
+    private static ArrayList<String> AvailTiles = new ArrayList<String>();
+
+
+
     public Player(String n) {	
 	score = 0;
 	name = n;
@@ -20,7 +22,12 @@ public class Player {
 		Rack.add(new Tiles());
 	    }
 	rng = new Random();
-	AvailTiles = new ArrayList<String>();
+	
+
+	
+    }
+    public void addNewBag()
+    {
 	for(int i=0;i<12; i++) {
 	    AvailTiles.add("E");
 	}
@@ -63,11 +70,7 @@ public class Player {
 	    AvailTiles.add("Q");
 	    AvailTiles.add("Z");
 	}
-
-
-	
     }
-    
     public void rackRefill() {
 	for(int i=0;i<7;i++) {
 	    Tiles t = Rack.remove(0);

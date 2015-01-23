@@ -14,6 +14,7 @@ public class Driver
 	Scanner sc = new Scanner(System.in);
 	System.out.println("Player 1 Name?");
 	Player p1 = new Player(sc.nextLine());
+	p1.addNewBag();
 	players.add(p1);
 	System.out.println("Player 2 Name?");
 	Player p2 = new Player(sc.nextLine());
