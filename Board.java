@@ -49,10 +49,10 @@ public class Board {
 	int y = ycoor;
 	int WordPoints = 0;
 	int bonus = 1;
-	boolean TileMode = false;
+        int TileMode = 0;
 
 	while(board[x][y].getTileMode() != 0) {
-	    if(board[x][y].getTileMode() == 2) { TileMode = true; }
+	    if(board[x][y].getTileMode() == 2) { TileMode++; }
 	    word = word + board[x][y].getLetter();
 	    WordPoints = WordPoints + board[x][y].getPoints();
 	    bonus = bonus * board[x][y].getWBonus();
@@ -60,7 +60,10 @@ public class Board {
 	}
 	WordPoints = WordPoints * bonus;
 	
-        if(checkWord(word) && TileMode) {
+        if(checkWord(word) && TileMode > 0) {
+	    if( TileMode == 7) {
+		return Wordpoints + 50;
+	    }
 	    return WordPoints;
 	}
 	return 0;
@@ -72,10 +75,10 @@ public class Board {
 	int y = ycoor;
 	int WordPoints = 0;
 	int bonus = 1;
-	boolean TileMode = false;
+        int TileMode = 0;
 
 	while(board[x][y].getTileMode() != 0) {
-	    if(board[x][y].getTileMode() == 2) { TileMode = true; }
+	    if(board[x][y].getTileMode() == 2) { TileMode++; }
 	    word = word + board[x][y].getLetter();
 	    WordPoints = WordPoints + board[x][y].getPoints();
 	    bonus = bonus * board[x][y].getWBonus();
@@ -83,7 +86,10 @@ public class Board {
 	}
 	WordPoints = WordPoints * bonus;
 	
-	if(checkWord(word) && TileMode) {
+	if(checkWord(word) && TileMode > 0) {
+	    if( TileMode == 7) {
+		return WordPoints + 50;
+	    }
 	    return WordPoints;
 	}
 	return 0;
