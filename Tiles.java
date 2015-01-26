@@ -7,6 +7,7 @@ public class Tiles {
     private int tileMode;
     private int tileX;
     private int tileY;
+    private boolean centerTile;
 	
     // --- CONSTRUCTORS --- //
     public Tiles() {
@@ -15,6 +16,7 @@ public class Tiles {
 	values = new LetterVal();
 	wordBonus = 1;
 	letterBonus = 1;
+	centerTile = false;
     }
     public Tiles(int w, int l, int t) {
 	points = 0;
@@ -101,12 +103,32 @@ public class Tiles {
     public int getLBonus() {
 	return letterBonus;
     }
-
+    // sets word bonus
+    public void setWBonus (int w)
+    {
+	wordBonus = w;
+    }
+    // sets letter bonus
+    public void setLBonus (int l)
+    {
+	letterBonus = l;
+    }
+    // sets whether the tile is the center
+    public void setCenter (boolean c)
+    {
+	centerTile = c;
+    }
+    public boolean getCenter ()
+    {
+	return centerTile;
+    }
+    
     // --- SETTING LETTERS --- //
     //return letter
     public String getLetter() {
 	return letter;
     }
+  
     
     //set letter
     public void setLetter(String l) {
@@ -114,4 +136,5 @@ public class Tiles {
 	letter = l;
 	
     }
+   
 }

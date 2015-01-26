@@ -9,7 +9,6 @@ public class Driver
 	Board b = new Board();
 	Tiles[][] board = b.getBoard();
 	
-	board[10][10].setTileMode(2);
 	ArrayList<Player> players = new ArrayList<Player>();
 	Scanner sc = new Scanner(System.in);
 	System.out.println("Player 1 Name?");
@@ -23,7 +22,7 @@ public class Driver
 	players.add(p2);
 	
 	   
-	GUI x = new GUI(b.getBoard(), players);
+	GUI x = new GUI(b, players);
 	x.setVisible(true);
 	/*
 	Player One = new Player(name1.getText());

@@ -17,9 +17,10 @@ import java.util.ArrayList;
 
 public class GUI extends JFrame {
     private Container pane;
+    private Board Board;
     private JTextField name1,name2,name3,name4;
     public Canvas canvas;
-    private int turn; 
+    private int turn;
     private Tiles[][] board; // the board array needs to be updated whenever something happens. 
     private ArrayList<Player> players;
     private int tileWidth = 30; // tileWidth is created and given a default value
@@ -31,9 +32,12 @@ public class GUI extends JFrame {
     private Font letterFont;
     private Font pointFont;
     private Font titleFont;
+    private Font bonusFont;
+    private Font centerFont;
     public FontMetrics points;
     public FontMetrics title;
     public FontMetrics authors;
+    public boolean firstTurn;
     /*
       Defines the colors for a placed tile (a tile which has been scored/used), 
       a visible tile (one which has been put on the board but not scored/used) 
@@ -42,26 +46,36 @@ public class GUI extends JFrame {
     Color scoredTile = new Color(206, 163, 132);
     Color visibleTile = new Color(239, 194, 155);
     Color blankTile = new Color(84, 84, 84);
-    Color selectedTile = new Color(255, 0, 0);
+    Color selectedTile = new Color(242, 184, 90);
+    Color scoreButton = new Color(242, 77, 12);
+    Color tripleWord = new Color(247, 123, 74);
+    Color tripleLetter = new Color(2, 186, 26);
+    Color doubleLetter = new Color(74, 239, 247);
+    Color doubleWord = new Color(245, 88, 88);
  
     /* Basically if the width of the window is smaller than the height,
        the board is sized according to the width, else it's sized according to the height.
        titleSize does something similar for the size of the title */
     private int selectedTileX, selectedTileY;
 	
-    public GUI(Tiles[][] b, ArrayList<Player> p) {
-	board = b;
+    public GUI(Board b, ArrayList<Player> p) {
+	firstTurn = true;
+	Board = b;
+	board = Board.getBoard();
 	players = p; 
 	setTitle("Scrabble");
 	setSize(900,900);
 	setLocation(100,100);
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
-	turn = 0;
-	// Just sets up some objects and puts it on the pane
 	pane = getContentPane();
+	pane.setLayout(new GridLayout());	
+	turn = 0;
+
+	// Just sets up some objects and puts it on the pane
+
 	mouseEvent mE = new mouseEvent();
 	canvas = new Canvas();
-	canvas.setPreferredSize(new Dimension(450,450));
+	canvas.setPreferredSize(new Dimension(100,100));
 	canvas.setBackground(background);
 	canvas.addMouseListener(mE);
 	pane.add(canvas);
@@ -69,8 +83,8 @@ public class GUI extends JFrame {
 	
 	
     }
-    
-    private class mouseEvent implements MouseListener
+
+    public class mouseEvent implements MouseListener
     {
 	
 	String temp = new String(); // Temp location of the letter that is selected
@@ -136,8 +150,9 @@ public class GUI extends JFrame {
 			    isTileSelected = false;
 			    canvas.update(canvas.getGraphics());
 			}
-		    else
+		    else if (board[selectedX][selectedY].getTileMode() == 2 && !isTileSelected)
 			{
+			    
 			    temp = board[selectedX][selectedY].getLetter();
 			    tempX = selectedX;
 			    tempY = selectedY;
@@ -147,22 +162,25 @@ public class GUI extends JFrame {
 			}
 		  
 		}
+	    // is the mouse in the bounds of the tile rack?
 	    if (e.getX() > boardX + tileWidth * 3 && e.getY() > boardY + tileWidth * 16 && e.getX() < boardX + tileWidth * 10 && e.getY() < boardY + tileWidth * 17)
 		{
 		    selectedX = (e.getX() - (boardX + tileWidth * 3))/tileWidth;
 		    if (isTileSelected && players.get(turn).getRack().get(selectedX).getTileMode() == 0)
 			{
 			    players.get(turn).getRack().get(selectedX).setLetter(temp);
+			    players.get(turn).getRack().get(selectedX).setTileMode(2);
 			    try
 				{
 				    players.get(turn).getRack().get(rackX).setTileMode(0);
+				    rackX = -1;
 				}
 			    catch (IndexOutOfBoundsException f)
 				{
 				    board[tempX][tempY].setTileMode(0);
 				}
 			    canvas.update(canvas.getGraphics());
-			    rackX = -1;
+			   
 
 			}
 		    else
@@ -175,6 +193,31 @@ public class GUI extends JFrame {
 			    canvas.update(canvas.getGraphics());	
 			}
 					  
+		}
+	    // a makeshift button. Buttons weren't easily customizable nor were they easy to place, so it's easier to make on in the canvas
+	    if (e.getX() > boardX + tileWidth * 17 && e.getX() < boardX + tileWidth * 19 && e.getY() > boardY + tileWidth * 15 && e.getY() < boardY + tileWidth * 17)
+		{
+		    
+		    if (board[7][7].getTileMode() != 2 && firstTurn)
+			{
+			    System.out.println("First word needs to be in center of board");
+			}
+		    else
+			{
+			    if (Board.getPoints() > -1)
+				{
+				    players.get(turn).setScore(Board.getPoints());
+				    System.out.println(players.get(turn).getName() + " played a word worth " + Board.getPoints() + " points");
+				    System.out.println("Total points:");
+				    for (int i = 0; i < players.size(); i++)
+					{
+					    System.out.println(players.get(i).getName() + ": " + players.get(i).getScore());
+					}
+				    players.get(turn).rackRefill();
+				    turn = (turn + 1) % 2;
+				    canvas.update(canvas.getGraphics());
+				}
+			}
 		}
 
 	}
@@ -224,6 +267,8 @@ public class GUI extends JFrame {
 	    letterFont = new Font ("SansSerif", Font.BOLD, tileWidth / 2);
 	    pointFont = new Font("SansSerif", Font.BOLD, tileWidth * 2 / 7);
 	    titleFont = new Font("SansSerif", Font.BOLD, titleSize);
+	    bonusFont = new Font("SansSerif", Font.BOLD, tileWidth * 2 / 5);
+	    centerFont = new Font("SansSerif", Font.BOLD, tileWidth * 255 / 256);
 	    authors = g.getFontMetrics(letterFont);
 	    title = g.getFontMetrics(titleFont);
 	    points = g.getFontMetrics(pointFont); 
@@ -249,6 +294,7 @@ public class GUI extends JFrame {
 	    g.setColor(Color.RED);
 	    g.fillRect(boardX, boardY, tileWidth * 15 + 2, tileWidth * 15 + 2);
 
+     
 	    // Remember, always set the color back to black after done painting
 	    g.setColor(Color.BLACK);
 
@@ -284,6 +330,15 @@ public class GUI extends JFrame {
 		    this.paintTiles(g, tileX, tileY, rack.get(i));
 	    
 		}
+	    // Draw the scoring button
+	    g.drawRect(boardX + tileWidth * 17, boardY + tileWidth * 15, tileWidth * 2, tileWidth * 2);
+	    g.setColor(scoreButton);
+	    g.fillRect(boardX + tileWidth * 17, boardY + tileWidth * 15, tileWidth * 2, tileWidth * 2);
+	    g.setColor(Color.BLACK);
+	    g.setFont(letterFont);
+	    g.drawString("Play", boardX + tileWidth * 35 / 2, boardY + tileWidth * 65 / 4);
+
+	    
 	    
 	}
 	public void paintTiles (Graphics g, int tileX, int tileY, Tiles t)
@@ -296,33 +351,83 @@ public class GUI extends JFrame {
 			    
 	    String l = t.getLetter();
 	    String p = "" + t.getPoints();
+	    
 	    // Draws outline for tile slot
 	    g.drawRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
 	    // Depending on variables from the tile, it paints with one of the three different colors
-			   
+	    g.setColor(blankTile);
+	    String tileBonus = new String();
 	    switch (t.getTileMode())
 		{
 		case 0:
-		    g.setColor(blankTile);
+		    switch (t.getLBonus())
+			{
+			case 1:
+			    switch (t.getWBonus())
+				{
+				case 1:
+				    break;
+				case 2:
+				    g.setColor(doubleWord);
+				    tileBonus = "DW";
+				    break;
+				case 3:
+				    g.setColor(tripleWord);
+				    tileBonus = "TW";
+				    break;
+
+				}
+			    break;
+			case 2:
+			    if (t.getCenter())
+				{
+				    g.setColor(Color.WHITE);
+				    tileBonus = "★";
+				}
+			    else
+				{
+				    g.setColor(doubleLetter);
+				    tileBonus = "DL";
+				}
+			    break;
+			case 3:
+			    g.setColor(tripleLetter);
+			    tileBonus = "TL";
+			    break;
+			}
 		    break;
 		case 1: 
 		    g.setColor(selectedTile);
 		    break;
-				
+		     	
 		case 2: 
 		    g.setColor(visibleTile);
 		    break;
 		case 3:
 		    g.setColor(scoredTile);
 		    break;
-		default:
-		    break;
 				    
 		}
+
+			
 	    g.fillRect(tileX, tileY, tileWidth - 2, tileWidth - 2);
 	    g.setColor(Color.BLACK);
-				   
-	    if (t.getTileMode() != 0)
+	    
+	    if (t.getTileMode() == 0)
+		{
+		    if (t.getCenter())
+			{
+			    g.setFont(centerFont);
+			    g.drawString(tileBonus, tileX, tileY + tileWidth * 6 / 7);
+			}
+		    else
+			{
+			    g.setFont(bonusFont);
+			    g.drawString(tileBonus, tileX + (tileWidth / 8), tileY + (tileWidth / 2));
+			}
+			
+		}
+	    else
 		{
 		    // Draws the letter on the tile
 		    g.setFont(letterFont);
