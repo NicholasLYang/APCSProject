@@ -217,6 +217,11 @@ public class GUI extends JFrame {
 				    turn = (turn + 1) % 2;
 				    canvas.update(canvas.getGraphics());
 				}
+			    else
+				{
+				    isTileSelected = false;
+				    temp = new String();
+				}
 			}
 		}
 

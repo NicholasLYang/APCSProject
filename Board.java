@@ -82,6 +82,7 @@ public class Board {
 	int bonus = 1;
 	int TileMode = 0;
 
+
 	while(board[x][y].getTileMode() != 0) {
 	    if(board[x][y].getTileMode() == 2) { TileMode++; }
 	    word = word + board[x][y].getLetter();
@@ -112,6 +113,7 @@ public class Board {
 		    }
 			
 	    }
+
 	return 0;
     }
 
@@ -121,7 +123,9 @@ public class Board {
 	int y = ycoor;
 	int WordPoints = 0;
 	int bonus = 1;
+
 	int TileMode = 0;
+
 
 	while(board[x][y].getTileMode() != 0) {
 	    if(board[x][y].getTileMode() == 2) { TileMode++; }
@@ -153,6 +157,7 @@ public class Board {
 		    }
 			
 	    }
+
 	return 0;
     }
     // --- Finds which words to calculate points for
